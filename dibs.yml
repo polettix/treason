@@ -1,0 +1,26 @@
+---
+name: &name treason-dibs
+
+actions:
+   default:
+      - from: alpine:3.9
+      - pack:
+          run: |
+            #!/bin/sh
+            set -eu
+            exec >&2
+            srcd="$(cat DIBS_DIR_SRC)"
+            cached="$(cat DIBS_DIR_CACHE)/app"
+            acached="$cached/app"
+            apk --no-cache update
+            apk --no-cache add npm git
+            mkdir -p "$acached"
+            tar cC "$srcd" . | tar xC "$acached"
+            cd "$acached"
+            npm install
+            tar cC "$cached" app | tar xC /
+        commit:
+          entrypoint: ['/bin/sh']
+          cmd: ['-c', 'cd /app && node server.js --debug']
+      - image_name: *name
+        tags: ['*', 'latest']
