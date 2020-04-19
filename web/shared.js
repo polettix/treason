@@ -25,25 +25,25 @@
             roles: 'assassin',
             targeted: true,
             blockedBy: ['contessa'],
-            message: (idx, target) => `{${idx}} attempted to assassinate {${target}}`
+            message: (idx, target) => `{${idx}} sta tentando di assassinare {${target}}`
         },
         'steal': {
             cost: 0,
             roles: 'captain',
             targeted: true,
             blockedBy: ['captain', 'ambassador', 'inquisitor'],
-            message: (idx, target) => `{${idx}} attempted to steal from {${target}}`
+            message: (idx, target) => `{${idx}} sta tentando di rubare da {${target}}`
         },
         'exchange': {
             cost: 0,
             roles: ['ambassador', 'inquisitor'],
-            message: (idx) => `{${idx}} attempted to exchange`
+            message: (idx) => `{${idx}} sta tentando di scambiare ruoli`
         },
         'interrogate': {
             cost: 0,
             roles: 'inquisitor',
             targeted: true,
-            message: (idx, target) => `{${idx}} attempted to interrogate {${target}}`
+            message: (idx, target) => `{${idx}} sta tentando di interrogare {${target}}`
         }
     };
 

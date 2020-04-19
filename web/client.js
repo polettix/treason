@@ -62,7 +62,7 @@ vm = {
     incorrectPassword: ko.observable(false), // True if the user tried to join the game with the wrong password.
     currentGame: ko.observable(''), // The id of the game currently shown in the join game modal dialog.
     gameInfo: ko.observable(), // Info about the game  currently shown in the join game modal dialog.
-    globalChatMessages: ko.observableArray(['Welcome to Treason Coup']), // The global chat messages that have been received.
+    globalChatMessages: ko.observableArray(['Benvenuti su Treason Coup']), // The global chat messages that have been received.
     globalMessage: ko.observable(''), // The message the user is typing into the global chat box.
     wantToStart: ko.observable(null), // The player clicked start, but not everyone is ready, so we're showing a confirm msg (holds the type of game the player wanted to start).
     playingGame: ko.observable(null), // The id of the game that we are currently playing, or null if there is no active game.
@@ -105,10 +105,10 @@ vm.notifsEnabled.subscribe(function (enabled) {
     localStorageSet('notifsEnabled', enabled);
 });
 vm.notifToggleText = ko.computed(function () {
-    return vm.notifsEnabled() ? 'Disable notifications' : 'Enable notifications';
+    return vm.notifsEnabled() ? 'Disabilita le notifiche' : 'Abilita le notifiche';
 });
 vm.rankButtonText = ko.computed(function () {
-    return vm.showingGlobalRank() ? 'Show my rankings' : 'Show global rankings';
+    return vm.showingGlobalRank() ? 'Mostra i miei risultati' : 'Mostra tutti i risultati';
 });
 vm.canStartGame = ko.computed(function () {
     var p = ourPlayer();
@@ -269,10 +269,10 @@ socket.on('history', function (data) {
 socket.on('chat', function (data) {
     var from;
     if (data.from == vm.state.playerIdx()) {
-        from = 'You';
+        from = 'Te';
     } else {
         var player = vm.state.players()[data.from];
-        from = player ? player.name() : 'Unknown';
+        from = player ? player.name() : 'Sconosciuto';
         notifyPlayer(from + ' says: ' + data.message);
     }
     var html = '<b>' + from + ':</b> ' + data.message + '<br/>';
@@ -384,11 +384,11 @@ function confirmUserProfileDialog() {
 
 function isInvalidPlayerName() {
     if (!vm.playerName() || !vm.playerName().match(/^[a-zA-Z0-9_ !@#$*]+$/) || !vm.playerName().trim()) {
-        alert('Enter a valid name');
+        alert('Inserisci un nome valido');
         return true;
     }
     if (vm.playerName().length > 30) {
-        alert('Enter a shorter name');
+        alert('Inserisci un nome più corto');
         return true;
     }
     return false;
@@ -726,7 +726,7 @@ function leaveGame() {
     location.hash = '';
 }
 function onLeaveGame(oldUrl) {
-    if (confirm('Are you sure you want to leave this game?')) {
+    if (confirm('Abbandonare veramente questa partita?')) {
         command('leave');
     }
     else {
@@ -735,14 +735,15 @@ function onLeaveGame(oldUrl) {
 }
 $(window).on('beforeunload', function (e) {
     if (vm.playing()) {
-        return (e.returnValue = 'Are you sure you want to leave this game?');
+        return (e.returnValue = 'Abbandonare veramente questa partita?');
     }
 });
 function formatMessage(message) {
     for (var i = 0; i < vm.state.players().length; i++) {
         var playerName;
         if (i == vm.state.playerIdx()) {
-            playerName = 'you';
+            var player = vm.state.players()[i];
+            playerName = player ? player.name() : 'te';
         } else {
             var player = vm.state.players()[i];
             playerName = player ? player.name() : 'unknown';
@@ -751,8 +752,20 @@ function formatMessage(message) {
     }
     if (message.indexOf('you ') == 0) {
         // Fix caps.
-        message = 'Y' + message.substr(1);
+        message = 'T' + message.substr(1);
     }
+    message = message.replace(new RegExp('ambassador', 'g'), 'ambasciatore');
+    message = message.replace(new RegExp('assassin', 'g'), 'assassino');
+    message = message.replace(new RegExp('assassinoare', 'g'), 'assassinare');
+    message = message.replace(new RegExp('captain', 'g'), 'capitano');
+    message = message.replace(new RegExp('duke', 'g'), 'duca');
+    message = message.replace(new RegExp('inquisitor', 'g'), 'inquisitore');
+    message = message.replace(new RegExp('prendere tax', 'g'), 'prendere 3$ di tasse');
+    message = message.replace(new RegExp('ha preso tax', 'g'), 'ha preso 3$ di tasse');
+    message = message.replace(new RegExp('prendere income', 'g'), 'prendere 1$');
+    message = message.replace(new RegExp('ha preso income', 'g'), 'ha preso 1$');
+    message = message.replace(new RegExp('prendere foreign-aid', 'g'), 'prendere 2$ di aiuto straniero');
+    message = message.replace(new RegExp('ha preso foreign-aid', 'g'), 'ha preso 2$ di aiuto straniero');
     return message;
 }
 function stateMessage() {
@@ -767,24 +780,42 @@ function labelClass(role, revealed) {
         return 'label-' + role;
     }
 }
-function roleDescription(role) {
+function realRoleName(role) {
     if (role === 'ambassador') {
-        return 'Draw two from the deck and exchange your influences';
+        return 'ambasciatore';
     }
     if (role === 'inquisitor') {
-        return 'Draw one from the deck and exchange OR look at one opponent\'s role and optionally force an exchange';
+        return 'inquisitore';
     }
     if (role === 'assassin') {
-        return 'Pay $3 to reveal another player\'s influence; blocked by contessa';
+        return 'assassino';
     }
     if (role === 'captain') {
-        return 'Steal $2 from another player; blocked by captain and ' + getGameRole(['ambassador', 'inquisitor']);
-    }
-    if (role === 'contessa') {
-        return 'Block assassination';
+        return 'capitano';
     }
     if (role === 'duke') {
-        return 'Tax +$3; block foreign aid';
+        return 'duca';
+    }
+   return role;
+}
+function roleDescription(role) {
+    if (role === 'ambassador') {
+        return 'Prendi due carte dal mazzo e cambia i ruoli';
+    }
+    if (role === 'inquisitor') {
+        return 'Prendi una carta dal mazzo e cambia ruolo OPPURE guarda il ruolo di un avversario e, se vuoi, imponi di cambiarlo';
+    }
+    if (role === 'assassin') {
+        return 'Paga $3 per scoprire il ruolo di un avversario; può essere bloccato dalla contessa';
+    }
+    if (role === 'captain') {
+        return 'Ruba $2 ad un avversario; può essere bloccato da un capitano e ' + getGameRole(['ambassador', 'inquisitor']);
+    }
+    if (role === 'contessa') {
+        return "Blocca l'assassinio";
+    }
+    if (role === 'duke') {
+        return "Riscuoti 3$ di tasse; blocca l'aiuto dall'estero";
     }
     return '';
 }
@@ -811,6 +842,16 @@ function historyBorderClass(items) {
     } else {
         return '';
     }
+}
+function realActionName(engname) {
+   if (engname === 'tax') { return 'riscuoti tasse'; }
+   if (engname === 'steal') { return 'ruba'; }
+   if (engname === 'assassinate') { return 'uccidi'; }
+   if (engname === 'interrogate') { return 'interroga'; }
+   if (engname === 'exchange') { return 'scambia ruoli'; }
+   if (engname === 'income') { return 'prendi 1$'; }
+   if (engname === 'foreign-aid') { return 'aiuto straniero'; }
+   return engname;
 }
 function actionNames() {
     // This is the order I want them to appear in the UI.
@@ -887,25 +928,25 @@ function notifyPlayer(message) {
 }
 function notifyPlayerOfState() {
     if (weAreInState(states.START_OF_TURN)) {
-        notifyPlayer('Your turn');
+        notifyPlayer('Tocca a te');
     }
     else if (weAreInState(states.EXCHANGE)) {
-        notifyPlayer('Choose the roles to keep');
+        notifyPlayer('Scegli quali ruoli tenere');
     }
     else if (weCanBlock() || weCanChallenge()) {
         notifyPlayer(stateMessage());
     }
     else if (weAreInState(states.EXCHANGE)) {
-        notifyPlayer('Choose the roles to keep');
+        notifyPlayer('Scegli quali ruoli tenere');
     }
     else if (weMustReveal()) {
-        notifyPlayer('You must reveal an influence');
+        notifyPlayer('Devi rivelare un tuo ruolo');
     }
     else if (weHaveWon()) {
-        notifyPlayer('You have won!');
+        notifyPlayer('Hai vinto!');
     }
     else if (theyHaveWon()) {
-        notifyPlayer(winnerName() + ' has won!');
+        notifyPlayer(winnerName() + ' ha vinto!');
     }
 }
 function notifsSupported() {
