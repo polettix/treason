@@ -3,16 +3,16 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="newGameModalTitle">Create New Game</h4>
+                <h4 class="modal-title" id="newGameModalTitle">Crea un nuovo Gioco</h4>
             </div>
             <div class="modal-body">
                 <form data-bind="submit: create">
                     <p><input type="text" placeholder="Type a password" data-bind="textInput: password"/></p>
-                    <p><button type="submit" class="btn btn-default">Create game</button></p>
+                    <p><button type="submit" class="btn btn-default">Crea il gioco</button></p>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
             </div>
         </div>
     </div>
@@ -22,43 +22,43 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="joinGameModalTitle" data-bind="text: gameInfo() ? 'Game ' + gameInfo().gameName : 'Game not found'"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Chiudi"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="joinGameModalTitle" data-bind="text: gameInfo() ? 'Gioco ' + gameInfo().gameName : 'Gioco inesistente'"></h4>
             </div>
             <div class="modal-body">
                 <div data-bind="visible: !gameInfo()">
-                    The game was not found. Please check the URL and try again.
+                    Il gioco non esiste. Prego verificare l'indirizzo e provare di nuovo.
                 </div>
                 <div data-bind="with: gameInfo">
                     <form data-bind="submit: join.bind(null, null, null, gameName)">
                         <p>State: <span data-bind="text: status"></span></p>
                         <p>Mode: <span data-bind="text: type"></span></p>
                         <p data-bind="visible: passwordRequired">Password: <input type="text" placeholder="Password" data-bind="textInput: $parent.password"/></p>
-                        <p class="error" data-bind="visible: $root.incorrectPassword">Incorrect password</p>
+                        <p class="error" data-bind="visible: $root.incorrectPassword">Password errata</p>
 
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Player</th>
-                                        <th>Human</th>
+                                        <th>Giocatore</th>
+                                        <th>Umano</th>
                                     </tr>
                                 </thead>
                                 <tbody data-bind="foreach: players">
                                     <tr>
                                         <td data-bind="text: playerName"></td>
-                                        <td data-bind="text: ai == true ? 'no' : 'yes'"></td>
+                                        <td data-bind="text: ai == true ? 'no' : 'sì'"></td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
 
-                        <p><button type="submit" class="btn btn-default btn-block">Join game</button></p>
+                        <p><button type="submit" class="btn btn-default btn-block">Unisciti al gioco</button></p>
                     </form>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
             </div>
         </div>
     </div>
@@ -69,8 +69,8 @@
         <div class="modal-content">
             <form data-bind="submit: confirmUserProfileDialog">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="passwordRequiredTitle">I shall henceforth be known as:</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Chiudi"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="passwordRequiredTitle">Da ora in poi mi chiamo:</h4>
                 </div>
                 <div class="modal-body">
                     <p><input type="text" placeholder="Name" data-bind="textInput: playerName"/></p>
@@ -87,24 +87,25 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="doubleRevealWarningTitle">Be Careful!</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Chiudi"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="doubleRevealWarningTitle">Fai attenzione!</h4>
             </div>
             <div class="modal-body">
                 <p>
-                    The action you are about to take deserves heavy consideration.
+                    L'azione che stai per fare merita una seria riflessione.
                 </p>
                 <p>
-                    Even though you have two influences left, it is possible to lose them both right now. If this response to the assassination attempt fails, you will lose one influence for the failure, and a second for the assassination itself.
+                    Anche se hai ancora due ruoli attivi, è possibile che tu li perda entrambi in un colpo solo. Se il tuo bluff
+                    viene scoperto, perderai un ruolo per il fallimento, ed un altro ruolo per l'assassinio stesso.
                 </p>
                 <p>
-                    Choose wisely!
+                    Scegli con saggezza!
                 </p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Reconsider</button>
-                <button type="button" class="btn btn-default" data-bind="click: confirmDoubleKillAction">Confirm</button>
-                <button type="button" class="btn btn-default" data-bind="click: disableDoubleKillWarning">Confirm and do not warn again</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Ripensaci</button>
+                <button type="button" class="btn btn-default" data-bind="click: confirmDoubleKillAction">Conferma</button>
+                <button type="button" class="btn btn-default" data-bind="click: disableDoubleKillWarning">Conferma e non seccarmi più</button>
             </div>
         </div>
     </div>
